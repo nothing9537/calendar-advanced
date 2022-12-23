@@ -25,7 +25,7 @@ export default function NavBar() {
 
 	return (
 		<Layout.Header>
-			<Row justify='end'>
+			<Row justify='end' align='middle'>
 				{isAuth
 					?
 					<>
@@ -42,7 +42,7 @@ export default function NavBar() {
 					:
 					<Menu theme='dark' selectable={false}>
 						<Menu.Item
-							key={1}
+							key={0}
 							onClick={handleLogin}
 						>
 							Login

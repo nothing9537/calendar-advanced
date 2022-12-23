@@ -1,6 +1,6 @@
+import { API } from './../../API/index';
 import { IUser } from './../../models/IUser';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
 
 export interface AuthState {
 	isAuth: boolean;
@@ -21,8 +21,8 @@ export const login = createAsyncThunk(
 	async ({ password, username }: IUser) => {
 		try {
 			setLoading(true)
-			const response = await axios.get<IUser[]>('/users.json')
-			const mokeUser = response.data.find((user) => user.username === username && user.password === password)
+			const response = (await API.UsersService.getUsers()).data
+			const mokeUser = response.find((user) => user.username === username && user.password === password)
 			return mokeUser
 		} catch (error) {
 			setError(error)
