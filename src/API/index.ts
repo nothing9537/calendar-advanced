@@ -1,3 +1,4 @@
+import { EventService } from "./EventService"
 import { UsersService } from "./UsersService"
 
 export const url = '/users.json'
@@ -9,7 +10,8 @@ export const endpoints = {
 }
 
 export const API = {
-	UsersService
+	UsersService,
+	EventService
 }
 
 export default API

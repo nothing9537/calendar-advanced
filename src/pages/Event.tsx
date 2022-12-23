@@ -4,14 +4,16 @@ import EventCalendar from '../components/EventCalendar'
 import EventForm from '../components/Forms/EventForm'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { useAppSelector } from '../hooks/useAppSelector'
-import { fetchGuests } from '../redux/reducers/event.slice'
+import { IEvent } from '../models/IEvent'
+import { createEvent, fetchEvents, fetchGuests } from '../redux/reducers/event.slice'
 import { parseSelectOptions } from '../utils/parseSelectOptions'
 
 export default function Event() {
 
 	const dispatch = useAppDispatch()
 
-	const { guests } = useAppSelector(state => state.event)
+	const { guests, events } = useAppSelector(state => state.event)
+	const { user } = useAppSelector(state => state.auth)
 
 	const [isModalVisible, setModalVisible] = useState(false)
 
@@ -25,11 +27,17 @@ export default function Event() {
 
 	useEffect(() => {
 		dispatch(fetchGuests())
+		dispatch(fetchEvents(user.username))
 	}, [])
+
+	function handleSubmit(event: IEvent) {
+		dispatch(createEvent(event))
+		setModalVisible(false)
+	}
 
 	return (
 		<Layout>
-			<EventCalendar events={[]} />
+			<EventCalendar events={events} />
 			<Row justify='center'>
 				<Button
 					type='primary'
@@ -47,6 +55,7 @@ export default function Event() {
 			>
 				<EventForm
 					guests={parseSelectOptions(guests)}
+					submit={handleSubmit}
 				/>
 			</Modal>
 		</Layout>

@@ -21,6 +21,15 @@ export const fetchGuests = createAsyncThunk(
 	}
 )
 
+export const fetchEvents = createAsyncThunk(
+	'event/fetchEvents',
+	async (username: string) => {
+		const events = API.EventService.getEvents() as IEvent[]
+		const currentEvents = events.filter((event, index) => event.author !== username || event.guests[index] !== username)
+		return currentEvents
+	}
+)
+
 export const eventSlice = createSlice({
 	name: 'event',
 	initialState,
@@ -31,13 +40,22 @@ export const eventSlice = createSlice({
 		setEvents: (state, { payload }) => {
 			state.events = payload
 		},
+		createEvent: (state, { payload }) => {
+			const events = API.EventService.getEvents() as IEvent[]
+			events.push(payload)
+			state.events = events
+			localStorage.setItem('events', JSON.stringify(events))
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchGuests.fulfilled, (state, { payload }) => {
 			state.guests = payload
 		})
+		builder.addCase(fetchEvents.fulfilled, (state, { payload }) => {
+			state.events = payload
+		})
 	}
 })
 
-export const { setEvents, setGuests } = eventSlice.actions
+export const { setEvents, setGuests, createEvent } = eventSlice.actions
 export default eventSlice.reducer
