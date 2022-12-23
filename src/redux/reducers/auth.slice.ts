@@ -6,13 +6,13 @@ export interface AuthState {
 	isAuth: boolean;
 	user: IUser;
 	isLoading: boolean;
-	error: string
+	error: { message: string; status: boolean }
 }
 
 const initialState: AuthState = {
 	isAuth: false,
 	user: {} as IUser,
-	error: '',
+	error: { message: '', status: false },
 	isLoading: false
 }
 
@@ -70,9 +70,9 @@ export const authSlice = createSlice({
 				localStorage.setItem('username', payload.username)
 				state.user = payload
 				state.isAuth = true
-				state.error = ''
+				state.error = initialState.error
 			} else {
-				state.error = 'Incorrect login or password'
+				state.error = { message: 'Incorrect login or password', status: true }
 			}
 		})
 		builder.addCase(logout.fulfilled, (state, { payload }) => {
@@ -81,9 +81,9 @@ export const authSlice = createSlice({
 				localStorage.removeItem('username')
 				state.user = {} as IUser
 				state.isAuth = false
-				state.error = ''
+				state.error = initialState.error
 			} else {
-				state.error = 'Something went wrong on server. Please try again'
+				state.error = { message: 'Incorrect login or password', status: true }
 			}
 		})
 	}

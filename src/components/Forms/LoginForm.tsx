@@ -16,14 +16,17 @@ export default function LoginForm() {
 
 	async function handleFinish(data: IUser) {
 		await dispatch(login(data))
-		navigate(RouteNames.EVENT)
+		
+		if (error.status) {
+			navigate(RouteNames.EVENT)
+		}
 	}
 
 	return (
 		<Form
 			onFinish={handleFinish}
 		>
-			{error && <div style={{ color: 'red' }}>{error}</div>}
+			{error.status && <div style={{ color: 'red' }}>{error.message}</div>}
 			<Form.Item
 				label='Username'
 				name='username'
